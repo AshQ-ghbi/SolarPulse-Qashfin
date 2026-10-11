@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+    background-image: radial-gradient(circle at 1px 1px, rgba(20, 20, 19, 0.045) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+  ::selection {
+    background: #fde7c3;
+  }
+  input[type='range'] {
+    accent-color: #d97706;
+  }
+  :focus-visible {
+    outline: 2px solid #d97706;
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border border-line bg-white shadow-card;
+  }
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.14em] text-muted;
+  }
+  .field-label {
+    @apply mb-1.5 block font-mono text-[11px] uppercase tracking-[0.12em] text-muted;
+  }
+  .field {
+    @apply w-full rounded-lg border border-line bg-canvas px-3 py-2.5 text-sm text-ink placeholder:text-muted/60 focus:border-ink focus:bg-white;
+  }
+  .btn-primary {
+    @apply inline-flex w-full items-center justify-center gap-2 rounded-lg bg-ink px-4 py-3 text-sm font-medium text-canvas transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-2 text-xs font-medium text-ink transition hover:border-ink;
+  }
+  .chip {
+    @apply inline-flex items-center rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em];
+  }
+  .skeleton {
+    background: linear-gradient(90deg, #efeeea 25%, #f8f7f4 37%, #efeeea 63%);
+    background-size: 800px 100%;
+    @apply animate-shimmer rounded-md;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 300" width="360" height="300" role="img" aria-label="Rooftop solar array under the sun">
+  <rect x="0.5" y="0.5" width="359" height="299" rx="14" fill="#FFFFFF" stroke="#E5E5E2"/>
+  <!-- sun -->
+  <g transform="translate(262 78)">
+    <g stroke="#D97706" stroke-width="3" stroke-linecap="round" opacity="0.9">
+      <path d="M0-46v-14M0 46v14M-46 0h-14M46 0h14M-33-33l-10-10M33 33l10 10M33-33l10-10M-33 33l-10 10"/>
+    </g>
+    <circle r="30" fill="#D97706"/>
+    <circle r="38" fill="none" stroke="#D97706" stroke-width="1" stroke-dasharray="2 5" opacity="0.6"/>
+  </g>
+  <!-- panel array -->
+  <g transform="translate(46 150)">
+    <path d="M0 96 L40 0 H250 L210 96 Z" fill="#334155"/>
+    <g stroke="#FBFBFA" stroke-width="1.6" opacity="0.85">
+      <path d="M10 72 H220 M20 48 H235 M30 24 H242"/>
+      <path d="M70 0 L35 96 M110 0 L90 96 M150 0 L145 96 M190 0 L200 96"/>
+    </g>
+    <path d="M0 96 L40 0" stroke="#141413" stroke-width="2"/>
+    <rect x="-20" y="96" width="270" height="10" fill="#141413"/>
+  </g>
+  <!-- grid meter -->
+  <g transform="translate(300 214)">
+    <rect width="34" height="44" rx="6" fill="#F7F6F2" stroke="#141413" stroke-width="1.6"/>
+    <circle cx="17" cy="17" r="9" fill="#FFFFFF" stroke="#15803D" stroke-width="2"/>
+    <path d="M17 17l5-5" stroke="#15803D" stroke-width="2" stroke-linecap="round"/>
+    <path d="M8 34h18" stroke="#141413" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <text x="22" y="34" font-family="JetBrains Mono, monospace" font-size="10" fill="#666660" letter-spacing="1.5">03 / WASTE AND ENERGY</text>
+</svg>

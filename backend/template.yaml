@@ -1,0 +1,135 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  SolarPulse by Qashfin - serverless backend.
+  API Gateway (HTTP API) -> Lambda (Node.js 24) -> Amazon Bedrock + DynamoDB rate limiting.
+
+Parameters:
+  AllowedOrigin:
+    Type: String
+    Default: '*'
+    Description: Frontend origin for CORS (e.g. https://main.xxxx.amplifyapp.com). Use '*' only for testing.
+  IpHashSalt:
+    Type: String
+    NoEcho: true
+    Default: solarpulse-change-me
+    Description: Salt mixed into the SHA-256 hash of client IPs.
+  RateLimitMax:
+    Type: Number
+    Default: 15
+    Description: Max audit requests per client IP per window.
+  RateLimitWindowSec:
+    Type: Number
+    Default: 60
+  BedrockModelId:
+    Type: String
+    Default: global.anthropic.claude-haiku-5-5
+    Description: Bedrock model ID or cross-Region inference profile ID.
+
+Globals:
+  Function:
+    Runtime: nodejs24.x
+    Architectures: [arm64]
+    MemorySize: 256
+    Timeout: 15
+
+Resources:
+  RateLimitTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: solarpulse-rate-limits
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: client_ip
+          AttributeType: S
+      KeySchema:
+        - AttributeName: client_ip
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: ttl_expiry
+        Enabled: true
+
+  SolarPulseLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'SolarPulseLambdaRole-${AWS::Region}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: SolarPulseLeastPrivilege
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: InvokeHaikuOnly
+                Effect: Allow
+                Action: bedrock:InvokeModel
+                Resource:
+                  - 'arn:aws:bedrock:*::foundation-model/anthropic.claude-haiku-5-5*'
+                  - !Sub 'arn:aws:bedrock:*:${AWS::AccountId}:inference-profile/*anthropic.claude-haiku-5-5*'
+              - Sid: RateLimitTableAccess
+                Effect: Allow
+                Action:
+                  - dynamodb:UpdateItem
+                  - dynamodb:GetItem
+                Resource: !GetAtt RateLimitTable.Arn
+
+  AuditLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/solarpulse-audit-handler
+      RetentionInDays: 14
+
+  SolarPulseHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+          - !Ref AllowedOrigin
+        AllowMethods: [POST, OPTIONS]
+        AllowHeaders: [Content-Type]
+        MaxAge: 600
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 20
+        ThrottlingRateLimit: 10
+
+  AuditFunction:
+    Type: AWS::Serverless::Function
+    DependsOn: AuditLogGroup
+    Properties:
+      FunctionName: solarpulse-audit-handler
+      Description: Deterministic solar metrics + Bedrock advisory with per-IP rate limiting
+      CodeUri: lambda/
+      Handler: audit-handler/index.handler
+      Role: !GetAtt SolarPulseLambdaRole.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref RateLimitTable
+          RATE_LIMIT_MAX: !Ref RateLimitMax
+          RATE_LIMIT_WINDOW_SEC: !Ref RateLimitWindowSec
+          IP_HASH_SALT: !Ref IpHashSalt
+          BEDROCK_REGION: !Ref AWS::Region
+          BEDROCK_MODEL_ID: !Ref BedrockModelId
+      Events:
+        AuditSolar:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref SolarPulseHttpApi
+            Path: /api/audit-solar
+            Method: POST
+
+Outputs:
+  ApiBaseUrl:
+    Description: Base URL for the frontend (set as VITE_API_BASE_URL)
+    Value: !Sub 'https://${SolarPulseHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}'
+  AuditEndpoint:
+    Description: Full audit endpoint
+    Value: !Sub 'https://${SolarPulseHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/api/audit-solar'
+  RateLimitTableName:
+    Value: !Ref RateLimitTable

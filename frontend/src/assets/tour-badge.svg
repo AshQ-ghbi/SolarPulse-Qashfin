@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Bharat Builds Tour, Track 03">
+  <defs>
+    <path id="ring" d="M60 60 m-44 0 a44 44 0 1 1 88 0 a44 44 0 1 1 -88 0"/>
+  </defs>
+  <circle cx="60" cy="60" r="57" fill="#FFFFFF" stroke="#141413" stroke-width="1.5"/>
+  <circle cx="60" cy="60" r="34" fill="#F7F6F2" stroke="#E5E5E2"/>
+  <text font-family="JetBrains Mono, monospace" font-size="8.5" letter-spacing="2.2" fill="#141413">
+    <textPath href="#ring" startOffset="0">BHARAT BUILDS TOUR · TRACK 03 · WASTE AND ENERGY ·</textPath>
+  </text>
+  <text x="60" y="58" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#D97706">03</text>
+  <text x="60" y="73" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.5" letter-spacing="1.5" fill="#666660">STAGE-02</text>
+</svg>
