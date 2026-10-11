@@ -1,8 +1,54 @@
-# SolarPulse by Qashfin
+## SolarPulse : Qashfin
+
+<div align="center">
+
+[![Live App Demo](https://img.shields.io/badge/🌐_Live_App_Demo-Visit_SolarPulse-2563eb?style=for-the-badge)](https://main.d1x9ve942jhft3.amplifyapp.com/)
+[![YouTube Demo Video](https://img.shields.io/badge/▶️_YouTube_Demo_Video-Watch_Walkthrough-red?style=for-the-badge)](https://youtu.be/YOUR_DEMO_VIDEO_ID)
+[![GitHub Repository](https://img.shields.io/badge/📦_GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/AshQ-ghbi/SolarPulse-Qashfin)
+
+</div>
+
+<br />
 
 Rooftop solar adoption and carbon mitigation intelligence, built for the **Bharat Builds Tour, Track 03: Waste and Energy**.
 
 Enter a monthly power bill, a city and a roof type. SolarPulse returns a recommended system size, roof footprint, annual generation, CO2 offset, monthly savings, PM Surya Ghar subsidy, payback range and an engineering-style advisory written by Amazon Bedrock.
+
+---
+
+## UI & Application Walkthrough
+
+### 1. Landing & Feasibility Overview
+Instant rooftop solar feasibility discovery without invasive lead forms or sales pitches.
+
+![SolarPulse Hero & Feasibility Discovery](docs/SolarPulse%20i.png)
+
+---
+
+### 2. Deterministic Audit & Financial Engineering
+Separation of deterministic math from generative advice: exact kW sizing, roof footprint, carbon offsets, and PM Surya Ghar central subsidy calculations processed directly in Lambda.
+
+![SolarPulse Rooftop Input and Lambda Audit](docs/SolarPulse%20ii.png)
+
+---
+
+### 3. AI Engineering Advisory (Amazon Bedrock)
+Contextual installation advice, mounting recommendations based on roof type, tilt calculations, and grid interconnection guidance synthesized by Amazon Bedrock with a sub-3s response time.
+
+![SolarPulse Amazon Bedrock Advisory](docs/SolarPulse%20iii.png)
+
+---
+
+## Key Features & Highlights
+
+- **Deterministic Math Engine:** Pure engineering equations (`solarFormulas.js`) calculate panel capacity, generation yields, and payback ranges to prevent LLM mathematical hallucinations.
+- **Privacy-First (Zero PII):** No names, phone numbers, email addresses, or exact street locations are collected.
+- **Anonymous Rate Limiting:** SHA-256 salted IP hashing stored in Amazon DynamoDB with a 60-minute automatic TTL window to prevent API abuse.
+- **Graceful Fault Tolerance:** High-availability architecture with an automated in-memory rule engine fallback if upstream AI inference spikes in latency.
+- **PM Surya Ghar Scheme Integration:** Built-in central subsidy tiers (up to ₹78,000) modeled directly into the financial statement.
+
+---
+
 
 ## Architecture
 
